@@ -9,7 +9,7 @@ app.config.from_object('flask_example.config')
 print(app.config['SQLALCHEMY_DATABASE_URI'])
 db = SQLAlchemy(app)
 
-from .models import Student
+from .models import Student, Cource, Teacher, Score
 
 @app.route('/')
 def index():
@@ -24,3 +24,10 @@ def index():
         records.append(student.to_string())
     data = {'records': records}
     return Response(response=json.dumps(data))
+
+# 查看外键约束
+'''
+select CONSTRAINT_NAME, TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME, REFERENCED_TABLE_SCHEMA, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
+from INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+where CONSTRAINT_SCHEMA = 'test' and CONSTRAINT_NAME != 'PRIMARY';
+'''
