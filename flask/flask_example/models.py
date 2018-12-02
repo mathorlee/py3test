@@ -1,11 +1,14 @@
 from flask_example import db
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship, backref
 
 # Column = db.Column
 # Integer = db.Integer
 # String = db.String
 
 class Student(db.Model):
+    __tablename__ = 'student'
+
     id = db.Column(Integer, primary_key=True, autoincrement=True)
     name = db.Column(String(80), unique=False, nullable=False)
 
@@ -19,9 +22,11 @@ class Student(db.Model):
 
 class Cource(db.Model):
     __tablename__ = 'cource'
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(80), nullable=False)
-    teacher_id = Column(Integer, nullable=False)
+    teacher_id = Column(Integer, ForeignKey('teacher.id'), nullable=False)
+    teacher = relationship('Teacher', backref=backref('cources', order_by=id))
 
     def __repr__(self):
         return '<Cource(name=%s)>' % self.name
@@ -29,6 +34,7 @@ class Cource(db.Model):
 
 class Teacher(db.Model):
     __tablename__ = 'teacher'
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(80), nullable=False)
 
