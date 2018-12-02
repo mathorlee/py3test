@@ -1,5 +1,5 @@
 from flask_example import db
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship, backref
 
 # Column = db.Column
@@ -11,6 +11,7 @@ class Student(db.Model):
 
     id = db.Column(Integer, primary_key=True, autoincrement=True)
     name = db.Column(String(80), unique=False, nullable=False)
+    # scores = relationship('')
 
     def to_string(self):
         # return '<User %r>' % self.name
@@ -41,9 +42,17 @@ class Teacher(db.Model):
     def __repr__(self):
         return '<Teacher(name=%s)>' % self.name
 
+score = db.Table(
+    'score',
+    # db.metadata,
+    Column('student_id', ForeignKey('student.id'), nullable=False),
+    Column('cource_id', ForeignKey('cource.id'), nullable=False),
+    Column('score', Integer, default=0),
+    UniqueConstraint('student_id', 'cource_id')
+)
 
-class Score(db.Model):
-    __tablename__ = 'score'
+class Score2(db.Model):
+    __tablename__ = 'score2'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     student_id = Column(Integer, nullable=False)
