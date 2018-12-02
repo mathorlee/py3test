@@ -1,12 +1,13 @@
 from flask_example import db
+from sqlalchemy import Column, Integer, String
 
-Column = db.Column
-Integer = db.Integer
-String = db.String
+# Column = db.Column
+# Integer = db.Integer
+# String = db.String
 
 class Student(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(80), unique=False, nullable=False)
+    id = db.Column(Integer, primary_key=True, autoincrement=True)
+    name = db.Column(String(80), unique=False, nullable=False)
 
     def to_string(self):
         # return '<User %r>' % self.name
