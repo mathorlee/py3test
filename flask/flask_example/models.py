@@ -6,6 +6,15 @@ from sqlalchemy.orm import relationship, backref
 # Integer = db.Integer
 # String = db.String
 
+score = db.Table(
+    'score',
+    # db.metadata,
+    Column('student_id', ForeignKey('student.id'), nullable=False),
+    Column('cource_id', ForeignKey('cource.id'), nullable=False),
+    Column('score', Integer, default=0),
+    UniqueConstraint('student_id', 'cource_id')
+)
+
 class Student(db.Model):
     __tablename__ = 'student'
 
@@ -29,6 +38,8 @@ class Cource(db.Model):
     teacher_id = Column(Integer, ForeignKey('teacher.id'), nullable=False)
     teacher = relationship('Teacher', backref=backref('cources', order_by=id))
 
+    students = relationship('Student', secondary=score, backref=backref('cources'))
+
     def __repr__(self):
         return '<Cource(name=%s)>' % self.name
 
@@ -41,15 +52,6 @@ class Teacher(db.Model):
 
     def __repr__(self):
         return '<Teacher(name=%s)>' % self.name
-
-score = db.Table(
-    'score',
-    # db.metadata,
-    Column('student_id', ForeignKey('student.id'), nullable=False),
-    Column('cource_id', ForeignKey('cource.id'), nullable=False),
-    Column('score', Integer, default=0),
-    UniqueConstraint('student_id', 'cource_id')
-)
 
 class Score2(db.Model):
     __tablename__ = 'score2'
