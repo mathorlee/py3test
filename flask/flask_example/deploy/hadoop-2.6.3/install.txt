@@ -1,0 +1,110 @@
+ln -s hadoop-2.6.3 ./hadoop
+ln -s hive-1.2.1   ./hive
+
+vim ~/.bashrc
+export JAVA_HOME="/usr/java/jdk1.8.0_191-amd64"
+export HADOOP_HOME="/home/opt/pkgs/hadoop-2.6.3"
+export HIVE_HOME="/home/opt/pkgs/hive-1.2.1"
+export PATH=$HADOOP_HOME/bin:$HIVE_HOME/bin:$PATH
+soource ~/.bashrc
+
+cd /home/opt/pkgs/hadoop
+
+mkdir tmp
+hdfs namenode -format
+
+18/12/05 20:42:09 INFO namenode.NameNode: STARTUP_MSG:
+/************************************************************
+STARTUP_MSG: Starting NameNode
+STARTUP_MSG:   host = master/192.168.54.3
+STARTUP_MSG:   args = [-format]
+STARTUP_MSG:   version = 2.6.3
+STARTUP_MSG:   classpath =
+STARTUP_MSG:   build = https://git-wip-us.apache.org/repos/asf/hadoop.git -r cc865b490b9a6260e9611a5b8633cab885b3d247; compiled by 'jenkins' on 2015-12-18T01:19Z
+STARTUP_MSG:   java = 1.8.0_191
+************************************************************/
+18/12/05 20:42:09 INFO namenode.NameNode: registered UNIX signal handlers for [TERM, HUP, INT]
+18/12/05 20:42:09 INFO namenode.NameNode: createNameNode [-format]
+Formatting using clusterid: CID-043359f9-633a-4e49-920d-b7bed0c3e41f
+18/12/05 20:42:10 INFO namenode.FSNamesystem: No KeyProvider found.
+18/12/05 20:42:10 INFO namenode.FSNamesystem: fsLock is fair:true
+18/12/05 20:42:10 INFO blockmanagement.DatanodeManager: dfs.block.invalidate.limit=1000
+18/12/05 20:42:10 INFO blockmanagement.DatanodeManager: dfs.namenode.datanode.registration.ip-hostname-check=true
+18/12/05 20:42:10 INFO blockmanagement.BlockManager: dfs.namenode.startup.delay.block.deletion.sec is set to 000:00:00:00.000
+18/12/05 20:42:10 INFO blockmanagement.BlockManager: The block deletion will start around 2018 十二月 05 20:42:10
+18/12/05 20:42:10 INFO util.GSet: Computing capacity for map BlocksMap
+18/12/05 20:42:10 INFO util.GSet: VM type       = 64-bit
+18/12/05 20:42:10 INFO util.GSet: 2.0% max memory 966.7 MB = 19.3 MB
+18/12/05 20:42:10 INFO util.GSet: capacity      = 2^21 = 2097152 entries
+18/12/05 20:42:10 INFO blockmanagement.BlockManager: dfs.block.access.token.enable=false
+18/12/05 20:42:10 INFO blockmanagement.BlockManager: defaultReplication         = 1
+18/12/05 20:42:10 INFO blockmanagement.BlockManager: maxReplication             = 512
+18/12/05 20:42:10 INFO blockmanagement.BlockManager: minReplication             = 1
+18/12/05 20:42:10 INFO blockmanagement.BlockManager: maxReplicationStreams      = 2
+18/12/05 20:42:10 INFO blockmanagement.BlockManager: replicationRecheckInterval = 3000
+18/12/05 20:42:10 INFO blockmanagement.BlockManager: encryptDataTransfer        = false
+18/12/05 20:42:10 INFO blockmanagement.BlockManager: maxNumBlocksToLog          = 1000
+18/12/05 20:42:10 INFO namenode.FSNamesystem: fsOwner             = opt (auth:SIMPLE)
+18/12/05 20:42:10 INFO namenode.FSNamesystem: supergroup          = supergroup
+18/12/05 20:42:10 INFO namenode.FSNamesystem: isPermissionEnabled = true
+18/12/05 20:42:10 INFO namenode.FSNamesystem: HA Enabled: false
+18/12/05 20:42:10 INFO namenode.FSNamesystem: Append Enabled: true
+18/12/05 20:42:10 INFO util.GSet: Computing capacity for map INodeMap
+18/12/05 20:42:10 INFO util.GSet: VM type       = 64-bit
+18/12/05 20:42:10 INFO util.GSet: 1.0% max memory 966.7 MB = 9.7 MB
+18/12/05 20:42:10 INFO util.GSet: capacity      = 2^20 = 1048576 entries
+18/12/05 20:42:10 INFO namenode.NameNode: Caching file names occuring more than 10 times
+18/12/05 20:42:10 INFO util.GSet: Computing capacity for map cachedBlocks
+18/12/05 20:42:10 INFO util.GSet: VM type       = 64-bit
+18/12/05 20:42:10 INFO util.GSet: 0.25% max memory 966.7 MB = 2.4 MB
+18/12/05 20:42:10 INFO util.GSet: capacity      = 2^18 = 262144 entries
+18/12/05 20:42:10 INFO namenode.FSNamesystem: dfs.namenode.safemode.threshold-pct = 0.9990000128746033
+18/12/05 20:42:10 INFO namenode.FSNamesystem: dfs.namenode.safemode.min.datanodes = 0
+18/12/05 20:42:10 INFO namenode.FSNamesystem: dfs.namenode.safemode.extension     = 30000
+18/12/05 20:42:10 INFO namenode.FSNamesystem: Retry cache on namenode is enabled
+18/12/05 20:42:10 INFO namenode.FSNamesystem: Retry cache will use 0.03 of total heap and retry cache entry expiry time is 600000 millis
+18/12/05 20:42:10 INFO util.GSet: Computing capacity for map NameNodeRetryCache
+18/12/05 20:42:10 INFO util.GSet: VM type       = 64-bit
+18/12/05 20:42:10 INFO util.GSet: 0.029999999329447746% max memory 966.7 MB = 297.0 KB
+18/12/05 20:42:10 INFO util.GSet: capacity      = 2^15 = 32768 entries
+18/12/05 20:42:10 INFO namenode.NNConf: ACLs enabled? false
+18/12/05 20:42:10 INFO namenode.NNConf: XAttrs enabled? true
+18/12/05 20:42:10 INFO namenode.NNConf: Maximum size of an xattr: 16384
+Re-format filesystem in Storage Directory /home/opt/pkgs/hadoop/tmp/dfs/name ? (Y or N) Y
+18/12/05 20:42:23 INFO namenode.FSImage: Allocated new BlockPoolId: BP-347496860-192.168.54.3-1544013743694
+18/12/05 20:42:23 INFO common.Storage: Storage directory /home/opt/pkgs/hadoop/tmp/dfs/name has been successfully formatted.
+18/12/05 20:42:23 INFO namenode.NNStorageRetentionManager: Going to retain 1 images with txid >= 0
+18/12/05 20:42:23 INFO util.ExitUtil: Exiting with status 0
+18/12/05 20:42:23 INFO namenode.NameNode: SHUTDOWN_MSG:
+/************************************************************
+SHUTDOWN_MSG: Shutting down NameNode at master/192.168.54.3
+************************************************************/
+
+
+
+
+./sbin/start-dfs.sh
+./sbin/start-yarn.sh
+pstree -ap | grep hadoop
+# 五大进程：namenode，datanode，secondarynamenode，resourcemanager，nodemanager
+  |-java,109288 -Dproc_namenode -Xmx1000m -Djava.net.preferIPv4Stack=true-Dhadoop.log.dir=/home/opt/pkgs/hado
+  |-java,109411 -Dproc_datanode -Xmx1000m -Djava.net.preferIPv4Stack=true-Dhadoop.log.dir=/home/opt/pkgs/hado
+  |-java,109563 -Dproc_secondarynamenode -Xmx1000m -Djava.net.preferIPv4Stack=true-Dhadoop.log.dir=/home/opt/
+  |-java,109834 -Dproc_resourcemanager -Xmx1000m -Dhadoop.log.dir=/home/opt/pkgs/hadoop-2.6.3/logs-Dyarn.log.
+  |-java,110049 -Dproc_nodemanager -Xmx1000m -Dhadoop.log.dir=/home/opt/pkgs/hadoop-2.6.3/logs-Dyarn.log.dir=
+
+dfs.name.dir
+dfs.data.dir
+dfs.client.buffer.dir
+mapred.local.dir
+
+start-dfs.sh - Starts the Hadoop DFS daemons, the namenode and datanodes. Use this before start-mapred.sh
+stop-dfs.sh - Stops the Hadoop DFS daemons.
+start-mapred.sh - Starts the Hadoop Map/Reduce daemons, the jobtracker and tasktrackers.
+stop-mapred.sh - Stops the Hadoop Map/Reduce daemons.
+
+Formatting the Namenode
+    mkdir -p /tmp/hadoop-username/dfs/name
+    $HADOOP_INSTALL/hadoop/bin/hadoop namenode -format
+Starting a Single node cluster
+    $HADOOP_INSTALL/hadoop/bin/start-all.sh
