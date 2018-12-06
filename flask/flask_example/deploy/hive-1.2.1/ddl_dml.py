@@ -16,7 +16,7 @@ row format delimited fields terminated by 'val_' lines terminated by '\n';
 
 load data local inpath '../hive/examples/files/kv1.txt' OVERWRITE INTO TABLE kv_table;
 
-create table employee2
+create table employee
 (employee_id INT comment '编号', employee_name String comment 'name of employee')
 comment '员工table'
 row format delimited fields terminated by '|' lines terminated by '\n';
