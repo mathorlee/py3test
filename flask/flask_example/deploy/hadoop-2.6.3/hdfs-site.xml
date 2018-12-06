@@ -4,6 +4,10 @@
         <value>master:9001</value>
     </property>
     <property>
+        <name>dfs.http.address</name>
+        <value>master:9002</value>
+    </property>
+    <property>
         <name>dfs.replication</name>
         <value>1</value>
     </property>
