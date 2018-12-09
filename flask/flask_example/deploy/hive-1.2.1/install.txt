@@ -1,31 +1,29 @@
-Try after removing the jline-0.9.94.jar file under the path $HADOOP_HOME/share/hadoop/yarn/lib/jline-0.9.94.jar
-Here's the link to jira ticket https://issues.apache.org/jira/browse/HIVE-8609
-
-opt       13973  5.3  9.4 2263700 175692 pts/2  Sl+  12:12   0:07
-/usr/java/jdk1.8.0_191-amd64/bin/java
--Xmx256m -Djava.net.preferIPv4Stack=true
--Dhadoop.log.dir=/home/opt/pkgs/hadoop-2.6.3/logs
--Dhadoop.log.file=hadoop.log
--Dhadoop.home.dir=/home/opt/pkgs/hadoop-2.6.3
--Dhadoop.id.str=opt
--Dhadoop.root.logger=INFO,console
--Djava.library.path=/home/opt/pkgs/hadoop-2.6.3/lib/native
--Dhadoop.policy.file=hadoop-policy.xml
--Djava.net.preferIPv4Stack=true
--Xmx512m
--Dhadoop.security.logger=INFO,NullAppender
-org.apache.hadoop.util.RunJar
-/home/opt/pkgs/hive/lib/hive-service-1.2.1.jar
-org.apache.hive.service.server.HiveServer2
-
 ./bin/hiveserver2
 !connect jdbc:hive2://master:10000/default -n opt
 1.Hive交互shell      bin/hive
 
+hadoop/share/hadoop/yarn/lib/jline-0.9.94.jar 替换成 hive/lib/jline-2.12.jar
+mysql的连接jar包拷贝到$HIVE_HOME/lib目录下
+wget https://cdn.mysql.com//Downloads/Connector-J/mysql-connector-java-5.1.47.tar.gz
+看看yarn的文档, azskaban presto spark flume drill zookeeper
+
 $ $HADOOP_HOME/bin/hadoop fs -mkdir       /tmp
-$ $HADOOP_HOME/bin/hadoop fs -mkdir       /user/hive/warehouse
+$ $HADOOP_HOME/bin/hadoop fs -mkdir  -p   /user/hive/warehouse
 $ $HADOOP_HOME/bin/hadoop fs -chmod g+w   /tmp
 $ $HADOOP_HOME/bin/hadoop fs -chmod g+w   /user/hive/warehouse
+
+./bin/hive --service schemaTool -initSchema -dbType mysql
+Metastore connection URL:	 jdbc:mysql://localhost:3306/hive?createDatabaseIfNotExist=true
+Metastore Connection Driver :	 com.mysql.jdbc.Driver
+Metastore connection User:	 root
+Thu Dec 06 15:09:01 CST 2018 WARN: Establishing SSL connection without server's identity verification is not recommended. According to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection must be established by default if explicit option isn't set. For compliance with existing applications not using SSL the verifyServerCertificate property is set to 'false'. You need either to explicitly disable SSL by setting useSSL=false, or set useSSL=true and provide truststore for server certificate verification.
+Starting metastore schema initialization to 1.2.0
+Initialization script hive-schema-1.2.0.mysql.sql
+Thu Dec 06 15:09:02 CST 2018 WARN: Establishing SSL connection without server's identity verification is not recommended. According to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection must be established by default if explicit option isn't set. For compliance with existing applications not using SSL the verifyServerCertificate property is set to 'false'. You need either to explicitly disable SSL by setting useSSL=false, or set useSSL=true and provide truststore for server certificate verification.
+Initialization script completed
+Thu Dec 06 15:09:05 CST 2018 WARN: Establishing SSL connection without server's identity verification is not recommended. According to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection must be established by default if explicit option isn't set. For compliance with existing applications not using SSL the verifyServerCertificate property is set to 'false'. You need either to explicitly disable SSL by setting useSSL=false, or set useSSL=true and provide truststore for server certificate verification.
+schemaTool completed
+
 nohup hive --service hiveserver2 &
 beeline -n opt -u jdbc:hive2://localhost:10000
 
@@ -34,125 +32,13 @@ beeline -n opt -u jdbc:hive2://localhost:10000
 3.hive启动为一个服务器，来对外提供服务
     bin/hiveserver2
     nohup bin/hiveserver2 1>/var/log/hiveserver.log 2>/var/log/hiveserver.err &
-
     启动成功后，可以在别的节点上用beeline去连接
     bin/beeline -u jdbc:hive2://mini1:10000 -n root
-
     或者
     bin/beeline
     ! connect jdbc:hive2://mini1:10000
-
 4.Hive命令
     hive  -e  ‘sql’
     bin/hive -e 'select * from t_test'
 
-
-下载mysql-connector-java-5.1.47.jar，放到hive/lib下
-wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.47.tar.gz
-
-Hive只在一个节点上安装即可
-
-1.上传tar包
-
-2.解压
-	tar -zxvf hive-1.2.1.tar.gz -C /usr/local
-    mv  hive-1.2.1 hive
-3.安装mysql数据库（切换到root用户）（装在哪里没有限制，只有能联通hadoop集群的节点）
-	mysql安装仅供参考，不同版本mysql有各自的安装流程
-		rpm -qa | grep mysql
-		rpm -e mysql-libs-5.1.66-2.el6_3.i686 --nodeps
-		rpm -ivh MySQL-server-5.1.73-1.glibc23.i386.rpm
-		rpm -ivh MySQL-client-5.1.73-1.glibc23.i386.rpm
-	修改mysql的密码
-	/usr/bin/mysql_secure_installation
-	（注意：删除匿名用户，允许用户远程连接）
-	登陆mysql
-	mysql -u root -p
-
-4.配置hive
-	（a）配置HIVE_HOME环境变量  vi conf/hive-env.sh 配置其中的$hadoop_home
-
-
-	（b）配置元数据库信息   vi  hive-site.xml
-	添加如下内容：
-<configuration>
-<property>
-<name>javax.jdo.option.ConnectionURL</name>
-<value>jdbc:mysql://192.168.31.11:3306/hive?createDatabaseIfNotExist=true</value>
-<description>JDBC connect string for a JDBC metastore</description>
-</property>
-
-<property>
-<name>javax.jdo.option.ConnectionDriverName</name>
-<value>com.mysql.jdbc.Driver</value>
-<description>Driver class name for a JDBC metastore</description>
-</property>
-
-<property>
-<name>javax.jdo.option.ConnectionUserName</name>
-<value>root</value>
-<description>username to use against metastore database</description>
-</property>
-
-<property>
-<name>javax.jdo.option.ConnectionPassword</name>
-<value>123456</value>
-<description>password to use against metastore database</description>
-</property>
-</configuration>
-
-5.安装hive和mysq完成后，将mysql的连接jar包拷贝到$HIVE_HOME/lib目录下
-	如果出现没有权限的问题，在mysql授权(在安装mysql的机器上执行)
-	mysql -uroot -p
-	#(执行下面的语句  *.*:所有库下的所有表   %：任何IP地址或主机都可以连接)
-	GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'root' WITH GRANT OPTION;
-	FLUSH PRIVILEGES;
-
-6. Jline包版本不一致的问题，需要拷贝hive的lib目录中jline.2.12.jar的jar包替换掉hadoop中的
-/home/hadoop/app/hadoop-2.6.4/share/hadoop/yarn/lib/jline-0.9.94.jar
-
-6.建表(默认是内部表)
-	create table trade_detail(id bigint, account string, income double, expenses double, time string) row format delimited fields terminated by '\t';
-	建分区表
-	create table td_part(id bigint, account string, income double, expenses double, time string) partitioned by (logdate string) row format delimited fields terminated by '\t';
-	建外部表
-	create external table td_ext(id bigint, account string, income double, expenses double, time string) row format delimited fields terminated by '\t' location '/td_ext';
-
-7.创建分区表
-	普通表和分区表区别：有大量数据增加的需要建分区表
-	create table book (id bigint, name string) partitioned by (pubdate string) row format delimited fields terminated by '\t';
-
-	分区表加载数据
-	load data local inpath './book.txt' overwrite into table book partition (pubdate='2010-08-22');
-
-	load data local inpath '/root/data.am' into table beauty partition (nation="USA");
-
-
-	select nation, avg(size) from beauties group by nation order by avg(size);
-
-
-
-
-
- 54行
- `COMMENT` varchar(256) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
-修改成：
-
- `COMMENT` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
-
-修改表注释字符集：
-
-565行
-`PARAM_VALUE` varchar(4000) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
-修改成：
-`PARAM_VALUE` varchar(4000) CHARACTER SET utf8 DEFAULT NULL,
-
-
-修改分区注释字符集：
-
-249行：
-`PKEY_COMMENT` varchar(4000) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
-
-修改成：
-`PKEY_COMMENT` varchar(4000) CHARACTER SET utf8 DEFAULT NULL,
 
