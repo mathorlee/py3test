@@ -12,17 +12,14 @@ $ $HADOOP_HOME/bin/hadoop fs -mkdir  -p   /user/hive/warehouse
 $ $HADOOP_HOME/bin/hadoop fs -chmod g+w   /tmp
 $ $HADOOP_HOME/bin/hadoop fs -chmod g+w   /user/hive/warehouse
 
+# vim替换整行
+:%s/latin1 COLLATE latin1_bin/utf8/g
+# PARTITION_NAME因为要建联合索引，使用latin1编码
+`PARTITION_NAME` varchar(767) CHARACTER latin1 COLLATE latin1_bin DEFAULT NULL,
+
+初始化元数据如果报错，加-verbose，看具体的报错信息
+schematool -dbType mysql -initSchema -verbose
 ./bin/hive --service schemaTool -initSchema -dbType mysql
-Metastore connection URL:	 jdbc:mysql://localhost:3306/hive?createDatabaseIfNotExist=true
-Metastore Connection Driver :	 com.mysql.jdbc.Driver
-Metastore connection User:	 root
-Thu Dec 06 15:09:01 CST 2018 WARN: Establishing SSL connection without server's identity verification is not recommended. According to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection must be established by default if explicit option isn't set. For compliance with existing applications not using SSL the verifyServerCertificate property is set to 'false'. You need either to explicitly disable SSL by setting useSSL=false, or set useSSL=true and provide truststore for server certificate verification.
-Starting metastore schema initialization to 1.2.0
-Initialization script hive-schema-1.2.0.mysql.sql
-Thu Dec 06 15:09:02 CST 2018 WARN: Establishing SSL connection without server's identity verification is not recommended. According to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection must be established by default if explicit option isn't set. For compliance with existing applications not using SSL the verifyServerCertificate property is set to 'false'. You need either to explicitly disable SSL by setting useSSL=false, or set useSSL=true and provide truststore for server certificate verification.
-Initialization script completed
-Thu Dec 06 15:09:05 CST 2018 WARN: Establishing SSL connection without server's identity verification is not recommended. According to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection must be established by default if explicit option isn't set. For compliance with existing applications not using SSL the verifyServerCertificate property is set to 'false'. You need either to explicitly disable SSL by setting useSSL=false, or set useSSL=true and provide truststore for server certificate verification.
-schemaTool completed
 
 nohup hive --service hiveserver2 &
 beeline -n opt -u jdbc:hive2://localhost:10000
@@ -41,4 +38,4 @@ beeline -n opt -u jdbc:hive2://localhost:10000
     hive  -e  ‘sql’
     bin/hive -e 'select * from t_test'
 
-
+grant all on *.* to "hive1"@"127.0.0.1" identified by "hive1";
