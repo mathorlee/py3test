@@ -9,7 +9,7 @@ app.config.from_object('flask_example.config')
 print(app.config['SQLALCHEMY_DATABASE_URI'])
 db = SQLAlchemy(app)
 
-from .models import Student, Cource, Teacher, Score2
+from .models import Student, Cource, Teacher, HiveTableStatisticHistoryExt
 
 @app.route('/')
 def index():
