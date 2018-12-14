@@ -70,7 +70,7 @@ class HiveTableStatisticHistoryExt(db.Model):
     表每天的统计数据
     '''
     __tablename__ = 'hive_tbl_statistic_history_ext'
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     date = Column(Date, nullable=False)
     metric_key = Column(String(80), nullable=False)  # 指标名字
     metric_value = Column(String(4000), nullable=True) # 指标名字
