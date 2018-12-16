@@ -45,7 +45,7 @@ ALTER TABLE table_name [PARTITION partition_spec] SET SERDEPROPERTIES serde_prop
 
 : (property_name = property_value, property_name = property_value, ... )
 
-CREATE TABLE IF NOT EXISTS tmp.employee2
+CREATE TABLE IF NOT EXISTS tmp.employee
 (age string COMMENT '年龄', name string comment '名字')
 COMMENT '员工表'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\174';

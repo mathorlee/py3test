@@ -85,6 +85,8 @@ SHUTDOWN_MSG: Shutting down NameNode at master/192.168.54.3
 
 ./sbin/start-dfs.sh
 ./sbin/start-yarn.sh
+./sbin/mr-jobhistory-daemon.sh start historyserver
+
 pstree -ap | grep hadoop
 # 五大进程：namenode，datanode，secondarynamenode，resourcemanager，nodemanager
   |-java,109288 -Dproc_namenode -Xmx1000m -Djava.net.preferIPv4Stack=true-Dhadoop.log.dir=/home/opt/pkgs/hado
