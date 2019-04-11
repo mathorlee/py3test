@@ -22,7 +22,7 @@ schematool -dbType mysql -initSchema -verbose
 ./bin/hive --service schemaTool -initSchema -dbType mysql
 
 nohup hive --service hiveserver2 &
-beeline -n opt -u jdbc:hive2://localhost:10000
+beeline -n bdp -u jdbc:hive2://localhost:10000
 
 2.Hive JDBC服务(参考java jdbc连接mysql)
 
@@ -39,3 +39,6 @@ beeline -n opt -u jdbc:hive2://localhost:10000
     bin/hive -e 'select * from t_test'
 
 grant all on *.* to "hive1"@"127.0.0.1" identified by "hive1";
+
+
+"{""installer"":""com.android.vending"",""gp_version"":""12.9.12-all [0] [PR] 224566662"",""referrer"":""googleadwords_int_Display""}",
