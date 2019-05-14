@@ -8,3 +8,4 @@ print(repo.untracked_files)
 
 
 print(git.status())
+repo.commit()
